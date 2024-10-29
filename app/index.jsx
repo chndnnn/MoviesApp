@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { TextInput, TouchableOpacity } from "react-native";
+import { ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { SafeAreaView, Text, View } from "react-native";
 import { MagnifyingGlassIcon as SearchIconOutline } from "react-native-heroicons/outline";
 import { Bars3BottomLeftIcon, XMarkIcon } from "react-native-heroicons/outline";
+import TrendingMovies from "../components/TrendingMovies";
+import MovieList from "../components/MovieList";
 
 const Home = () => {
   const [searchClicked, setSearchClicked] = useState(false);
   return (
     <View className="flex-1 bg-neutral-800">
       <SafeAreaView className="flex-1 bg-neutral-800 mt-10 p-1">
-        <View>
+        <View className="mb-2">
           {!searchClicked ? (
-            <View className="flex flex-row justify-between p-2 items-cente">
+            // if search button is not clicked
+            <View className="flex flex-row justify-between items-center p-2">
               <Bars3BottomLeftIcon color="white" />
               <View className="flex-row items-center">
                 <Text className="text-yellow-500 text-3xl">M</Text>
@@ -22,8 +25,10 @@ const Home = () => {
               </TouchableOpacity>
             </View>
           ) : (
+            // if search button is clicked
             <View className="flex flex-row justify-between p-2 items-center ">
               <TextInput
+                placeholderTextColor="white"
                 placeholder="search"
                 className="text-white border border-solid border-neutral-500 w-[80%] px-2 rounded"
               />
@@ -38,6 +43,11 @@ const Home = () => {
             </View>
           )}
         </View>
+        <TrendingMovies />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <MovieList name1={"Upcoming"} />
+          <MovieList name1={"Top Rated"} />
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

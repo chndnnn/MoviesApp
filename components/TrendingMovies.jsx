@@ -1,9 +1,16 @@
 import React from "react";
+import { TouchableNativeFeedback } from "react-native";
 import { Dimensions, Image, Text, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
+import { useRouter } from "expo-router";
 
 const TrendingMovies = () => {
   const width = Dimensions.get("window").width;
+  const router = useRouter();
+
+  function onViewClick(ele) {
+    router.push({ pathname: "/movie", params: { name: ele } });
+  }
 
   return (
     <View className=" p-2">
@@ -17,22 +24,24 @@ const TrendingMovies = () => {
           scrollAnimationDuration={2000}
           data={[1, 2, 3, 4, 5]}
           renderItem={({ index, i }) => (
-            <View
-              key={i}
-              style={{
-                flex: 1,
-                borderWidth: 1,
-                justifyContent: "center",
-                backgroundColor: "#555",
-                borderRadius: 10,
-                transform: [{ scale: 0.9 }],
-              }}
-            >
-              <Image
-                source={require("./../assets/images/SuperBat.jpg")}
-                className="h-full w-full rounded"
-              ></Image>
-            </View>
+            <TouchableNativeFeedback onPress={() => onViewClick(index)}>
+              <View
+                key={i}
+                style={{
+                  flex: 1,
+                  borderWidth: 1,
+                  justifyContent: "center",
+                  backgroundColor: "#555",
+                  borderRadius: 10,
+                  transform: [{ scale: 0.9 }],
+                }}
+              >
+                <Image
+                  source={require("./../assets/images/SuperBat.jpg")}
+                  className="h-full w-full rounded"
+                ></Image>
+              </View>
+            </TouchableNativeFeedback>
           )}
         />
       </View>

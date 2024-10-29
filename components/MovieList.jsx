@@ -1,13 +1,16 @@
 import { TouchableNativeFeedback } from "react-native";
 import { Image } from "react-native";
 import { Dimensions, ScrollView, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
 const MovieList = ({ name1 }) => {
+  const router = useRouter();
   const width = Dimensions.get("window").width;
   const name = "Superman vs batman";
 
   function onTrendingImagePressed(ele) {
-    
+    console.log(ele);
+    router.push({ pathname: "/movie", params: { name: ele } });
   }
   return (
     <View className="w-full p-2 ">
@@ -20,7 +23,7 @@ const MovieList = ({ name1 }) => {
           {[1, 2, 3, 4, 5].map((ele, i) => {
             return (
               <TouchableNativeFeedback
-                onPress={(ele) => onTrendingImagePressed(ele)}
+                onPress={() => onTrendingImagePressed(ele)}
               >
                 <View
                   key={i}

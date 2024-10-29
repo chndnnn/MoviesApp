@@ -23,12 +23,10 @@ const MovieList = ({ name1 }) => {
           {[1, 2, 3, 4, 5].map((ele, i) => {
             return (
               <TouchableNativeFeedback
+                key={i}
                 onPress={() => onTrendingImagePressed(ele)}
               >
-                <View
-                  key={i}
-                  className="mr-2 h-[150] w-[100px] flex flex-col justify-center items-center"
-                >
+                <View className="mr-2 h-[150] w-[100px] flex flex-col justify-center items-center">
                   <Image
                     className="w-full rounded h-[120] object-cover"
                     source={require("./../assets/images/SuperBat.jpg")}

@@ -24,9 +24,8 @@ const TrendingMovies = () => {
           scrollAnimationDuration={2000}
           data={[1, 2, 3, 4, 5]}
           renderItem={({ index, i }) => (
-            <TouchableNativeFeedback onPress={() => onViewClick(index)}>
+            <TouchableNativeFeedback key={i} onPress={() => onViewClick(index)}>
               <View
-                key={i}
                 style={{
                   flex: 1,
                   borderWidth: 1,

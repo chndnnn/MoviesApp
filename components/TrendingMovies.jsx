@@ -15,11 +15,11 @@ const TrendingMovies = () => {
   return (
     <View className=" p-2">
       <Text className="text-white text-xl font-semibold px-3">Trending</Text>
-      <View className="h-[250px] justify-center items-center">
+      <View className="h-[280px] justify-center items-center">
         <Carousel
           loop
           width={width * 0.95} // Width slightly less than screen width
-          height={width * 0.7} // Adjust height as needed
+          height={width * 0.8} // Adjust height as needed
           autoPlay={false}
           scrollAnimationDuration={2000}
           data={[1, 2, 3, 4, 5]}
@@ -32,12 +32,13 @@ const TrendingMovies = () => {
                   justifyContent: "center",
                   backgroundColor: "#555",
                   borderRadius: 10,
+
                   transform: [{ scale: 0.9 }],
                 }}
               >
                 <Image
                   source={require("./../assets/images/SuperBat.jpg")}
-                  className="h-full w-full rounded"
+                  className="h-full w-full rounded-xl"
                 ></Image>
               </View>
             </TouchableNativeFeedback>

@@ -3,24 +3,22 @@ import { Image } from "react-native";
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
-const MovieList = ({ name1, hideSeeAll }) => {
+const TopCast = ({ name1 }) => {
   const router = useRouter();
   const width = Dimensions.get("window").width;
   const name = "Superman vs batman";
+  const name2 = "henry";
 
   function onTrendingImagePressed(ele) {
     console.log(ele);
-    router.push({ pathname: "/movie", params: { name: ele } });
+    router.push({ pathname: "/Cast", params: { name: ele } });
   }
   return (
     <View className="w-full p-2 ">
-      <View className="flex-row justify-between items-center mb-1">
+      <View className="flex-row justify-between items-center mb-4">
         <Text className="text-white text-xl font-semibold">{name1}</Text>
-        {!hideSeeAll && (
-          <Text className="text-yellow-400 font-medium">See All</Text>
-        )}
       </View>
-      <View className="w-full border  border-neutral-800 mb-3 ">
+      <View className="w-full border border-neutral-800 mb-3">
         <ScrollView horizontal={true}>
           {[1, 2, 3, 4, 5].map((ele, i) => {
             return (
@@ -28,13 +26,16 @@ const MovieList = ({ name1, hideSeeAll }) => {
                 key={i}
                 onPress={() => onTrendingImagePressed(ele)}
               >
-                <View className="mr-2 h-[180] w-[120px] flex flex-col justify-center items-center">
+                <View className="mr-3 flex flex-col ">
                   <Image
-                    className="w-full rounded-xl h-[150] object-cover"
-                    source={require("./../assets/images/SuperBat.jpg")}
+                    className="w-[70] rounded-full h-[70] object-cover"
+                    source={require("./../assets/images/Henry.jpg")}
                   ></Image>
-                  <Text className="text-sm text-white">
+                  <Text className="text-sm text-white text-center">
                     {name.length > 10 ? name.slice(0, 10) + "..." : name}
+                  </Text>
+                  <Text className="text-sm text-neutral-400 text-center">
+                    {name2.length > 10 ? name2.slice(0, 10) + "..." : name2}
                   </Text>
                 </View>
               </TouchableNativeFeedback>
@@ -46,4 +47,4 @@ const MovieList = ({ name1, hideSeeAll }) => {
   );
 };
 
-export default MovieList;
+export default TopCast;

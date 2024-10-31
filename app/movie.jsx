@@ -12,12 +12,51 @@ import { Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import TopCast from "../components/TopCast";
 import MovieList from "../components/MovieList";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import ProgressBar from "../components/Progress";
+import {
+  fetchMovieCasts,
+  fetchMoviedescription,
+  fetchSimilarMovie,
+} from "./../components/MovieDb";
 
 const Movie = () => {
   const { height, width } = Dimensions.get("window");
-  const { name } = useLocalSearchParams();
+  const router = useRouter();
+  const [showLodaing, setShowLoading] = useState(true);
+  const [description, setDescription] = useState();
+  const [similar, setSimilar] = useState();
+  const [casts, setCasts] = useState();
+  const { id } = useLocalSearchParams();
+  const image = "https://image.tmdb.org/t/p/w500";
   const name1 = "Superman vs batman Superman";
 
+  function onBackClick() {
+    router.back();
+  }
+
+  useEffect(() => {
+    getMovieDescription();
+    getMovieCasts();
+    getSimilarMovie();
+    setShowLoading(false);
+  }, []);
+
+  async function getMovieDescription() {
+    const data = await fetchMoviedescription(id);
+    setDescription(data.data);
+  }
+  async function getMovieCasts() {
+    const data = await fetchMovieCasts(id);
+    setCasts(data.data.cast);
+  }
+  async function getSimilarMovie() {
+    const data = await fetchSimilarMovie(id);
+    setSimilar(data.data.results);
+  }
+
+  fetchSimilarMovie;
   return (
     <View className="flex-1 bg-neutral-800">
       <SafeAreaView>
@@ -36,7 +75,7 @@ const Movie = () => {
                 paddingHorizontal: 10,
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity onPress={onBackClick}>
                 <BackspaceIcon size={28} color={"orange"} />
               </TouchableOpacity>
               <TouchableOpacity>
@@ -47,7 +86,9 @@ const Movie = () => {
             {/* Background Image */}
             <Image
               style={{ height: height * 0.6, width }}
-              source={require("./../assets/images/SuperBat.jpg")}
+              source={{
+                uri: `${image}${description && description.poster_path}`,
+              }}
             />
             <LinearGradient
               colors={[
@@ -69,37 +110,43 @@ const Movie = () => {
           </View>
           <View className="mt-[-100] z-30">
             <Text className="text-white text-center  text-3xl font-semibold">
-              {name1}
+              {description && description.title}
             </Text>
             <View>
-              <Text className="text-center text-neutral-400">
-                Released . 2020 . 170min
+              <Text className="text-center text-neutral-400 mt-2">
+                {description && description.status} .{" "}
+                {description && description.release_date.split("-")[0]} .{" "}
+                {description && description.runtime}min
               </Text>
-              <View className="w-full flex flex-row justify-center">
-                <Text className="text-center text-neutral-400">Action .</Text>
-                <Text className="text-center text-neutral-400"> Thrill .</Text>
-                <Text className="text-center text-neutral-400"> Comedy</Text>
+              <View className="w-full flex flex-row justify-center mt-2">
+                {description &&
+                  description.genres.map((gener, index) => (
+                    <Text key={index} className="text-center text-neutral-400">
+                      {gener.name}{" "}
+                      {index + 1 < description.genres.length && " .  "}
+                    </Text>
+                  ))}
               </View>
-              <View className="w-full flex flex-row justify-center px-1">
+              <View className="w-full flex flex-row justify-center mt-2 px-1">
                 <Text className="text-center text-neutral-500">
-                  Batman v Superman: Dawn of Justice (2016) is a superhero film
-                  directed by Zack Snyder that pits two iconic DC heroes,
-                  Superman and Batman, against each other. It stars Henry Cavill
-                  as Superman (Clark Kent) and Ben Affleck as Batman (Bruce
-                  Wayne). The film explores themes of power, justice, and the
-                  consequences of superhero actions on humanity.
+                  {description && description.overview}
                 </Text>
               </View>
               <View>
-                <TopCast name1={"Top Casts"} />
+                <TopCast castData={casts} name1={"Top Casts"} />
               </View>
               <View>
-                <MovieList hideSeeAll={true} name1={"Similar Movies"} />
+                <MovieList
+                  movieData={similar}
+                  hideSeeAll={true}
+                  name1={"Similar Movies"}
+                />
               </View>
             </View>
           </View>
         </ScrollView>
       </SafeAreaView>
+      {showLodaing && <ProgressBar />}
     </View>
   );
 };

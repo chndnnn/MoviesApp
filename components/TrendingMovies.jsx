@@ -4,12 +4,15 @@ import { Dimensions, Image, Text, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useRouter } from "expo-router";
 
-const TrendingMovies = () => {
+const TrendingMovies = ({ trendingData }) => {
   const width = Dimensions.get("window").width;
+  const height = Dimensions.get("window").height;
   const router = useRouter();
+  const image = "https://image.tmdb.org/t/p/w500";
+  console.log(trendingData);
 
   function onViewClick(ele) {
-    router.push({ pathname: "/movie", params: { name: ele } });
+    router.push({ pathname: "/movie", params: { id: ele.id } });
   }
 
   return (
@@ -20,11 +23,14 @@ const TrendingMovies = () => {
           loop
           width={width * 0.95} // Width slightly less than screen width
           height={width * 0.8} // Adjust height as needed
-          autoPlay={false}
+          autoPlay={true}
           scrollAnimationDuration={2000}
-          data={[1, 2, 3, 4, 5]}
-          renderItem={({ index, i }) => (
-            <TouchableNativeFeedback key={i} onPress={() => onViewClick(index)}>
+          data={trendingData ? trendingData : []}
+          renderItem={({ item, index }) => (
+            <TouchableNativeFeedback
+              key={index}
+              onPress={() => onViewClick(item)}
+            >
               <View
                 style={{
                   flex: 1,
@@ -32,13 +38,19 @@ const TrendingMovies = () => {
                   justifyContent: "center",
                   backgroundColor: "#555",
                   borderRadius: 10,
-
                   transform: [{ scale: 0.9 }],
                 }}
               >
                 <Image
-                  source={require("./../assets/images/SuperBat.jpg")}
-                  className="h-full w-full rounded-xl"
+                  source={{
+                    uri: `${image}${item.poster_path}`,
+                  }}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    resizeMode: "cover contain", // Ensures the image covers the view without distortion
+                  }}
+                  className="rounded-xl"
                 ></Image>
               </View>
             </TouchableNativeFeedback>

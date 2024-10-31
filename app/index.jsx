@@ -1,54 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { SafeAreaView, Text, View } from "react-native";
 import { MagnifyingGlassIcon as SearchIconOutline } from "react-native-heroicons/outline";
 import { Bars3BottomLeftIcon, XMarkIcon } from "react-native-heroicons/outline";
 import TrendingMovies from "../components/TrendingMovies";
 import MovieList from "../components/MovieList";
+import { useRouter } from "expo-router";
+import ProgressBar from "../components/Progress";
+import {
+  fetchTopRatedMovies,
+  fetchTrendingMovies,
+  fetchUpcomingMovies,
+} from "../components/MovieDb";
 
 const Home = () => {
-  const [searchClicked, setSearchClicked] = useState(false);
+  const router = useRouter();
+
+  const [showLodaing, setShowLoading] = useState(false);
+  const [trendingList, settrendingLists] = useState([]);
+  const [upcomingList, setUpcomingListLists] = useState([]);
+  const [topRatedList, setTopRatedLists] = useState([]);
+
+  function onSearchClick() {
+    router.push({ pathname: "/SearchScreen" });
+  }
+
+  useEffect(() => {
+    getTrendingMovies();
+    getUpcomingsMovies();
+    getTopRatedMovies();
+  }, []);
+
+  async function getTrendingMovies() {
+    let data = await fetchTrendingMovies();
+    settrendingLists(data.data.results);
+  }
+  async function getUpcomingsMovies() {
+    let data = await fetchUpcomingMovies();
+    setUpcomingListLists(data.data.results);
+  }
+  async function getTopRatedMovies() {
+    let data = await fetchTopRatedMovies();
+    setTopRatedLists(data.data.results);
+  }
+
   return (
     <View className="flex-1 bg-neutral-800">
-      <SafeAreaView className="flex-1 bg-neutral-800 mt-10 p-1">
-        <View className="mb-2">
-          {!searchClicked ? (
-            // if search button is not clicked
+      {!showLodaing ? (
+        <SafeAreaView className="flex-1 bg-neutral-800 mt-10 p-1">
+          <View className="mb-2">
             <View className="flex flex-row justify-between items-center p-2">
               <Bars3BottomLeftIcon color="white" />
               <View className="flex-row items-center">
                 <Text className="text-yellow-500 text-3xl">M</Text>
                 <Text className="text-white text-2xl font-bold">ovie</Text>
               </View>
-              <TouchableOpacity onPress={() => setSearchClicked(true)}>
+              <TouchableOpacity onPress={onSearchClick}>
                 <SearchIconOutline color="white" />
               </TouchableOpacity>
             </View>
-          ) : (
-            // if search button is clicked
-            <View className="flex flex-row justify-between p-2 items-center ">
-              <TextInput
-                placeholderTextColor="white"
-                placeholder="search"
-                className="text-white border border-solid border-neutral-500 w-[80%] px-2 rounded"
-              />
-              <View className="flex flex-row gap-2">
-                <TouchableOpacity>
-                  <SearchIconOutline color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSearchClicked(false)}>
-                  <XMarkIcon color="white" />
-                </TouchableOpacity>
-              </View>
-            </View>
+          </View>
+          {trendingList.length > 0 && (
+            <TrendingMovies trendingData={trendingList} />
           )}
-        </View>
-        <TrendingMovies />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <MovieList name1={"Upcoming"} />
-          <MovieList name1={"Top Rated"} />
-        </ScrollView>
-      </SafeAreaView>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {upcomingList.length > 0 && (
+              <MovieList movieData={upcomingList} name1={"Upcoming"} />
+            )}
+            {topRatedList.length > 0 && (
+              <MovieList movieData={topRatedList} name1={"Top Rated"} />
+            )}
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <ProgressBar />
+      )}
     </View>
   );
 };

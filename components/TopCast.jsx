@@ -3,11 +3,12 @@ import { Image } from "react-native";
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
-const TopCast = ({ name1 }) => {
+const TopCast = ({ castData, name1 }) => {
   const router = useRouter();
   const width = Dimensions.get("window").width;
   const name = "Superman vs batman";
   const name2 = "henry";
+  const image = "https://image.tmdb.org/t/p/w500";
 
   function onTrendingImagePressed(ele) {
     console.log(ele);
@@ -20,27 +21,32 @@ const TopCast = ({ name1 }) => {
       </View>
       <View className="w-full border border-neutral-800 mb-3">
         <ScrollView horizontal={true}>
-          {[1, 2, 3, 4, 5].map((ele, i) => {
-            return (
-              <TouchableNativeFeedback
-                key={i}
-                onPress={() => onTrendingImagePressed(ele)}
-              >
-                <View className="mr-3 flex flex-col ">
-                  <Image
-                    className="w-[70] rounded-full h-[70] object-cover"
-                    source={require("./../assets/images/Henry.jpg")}
-                  ></Image>
-                  <Text className="text-sm text-white text-center">
-                    {name.length > 10 ? name.slice(0, 10) + "..." : name}
-                  </Text>
-                  <Text className="text-sm text-neutral-400 text-center">
-                    {name2.length > 10 ? name2.slice(0, 10) + "..." : name2}
-                  </Text>
-                </View>
-              </TouchableNativeFeedback>
-            );
-          })}
+          {castData &&
+            castData.map((ele, i) => {
+              return (
+                <TouchableNativeFeedback
+                  key={i}
+                  onPress={() => onTrendingImagePressed(ele)}
+                >
+                  <View className="mr-3 flex flex-col">
+                    <Image
+                      className="w-[70] rounded-full border border-neutral-500 h-[70] object-cover"
+                      source={{ uri: `${image}${ele.profile_path}` }}
+                    ></Image>
+                    <Text className="text-sm text-white text-center">
+                      {ele.name.length > 10
+                        ? ele.name.slice(0, 10) + "..."
+                        : ele.name}
+                    </Text>
+                    <Text className="text-xs text-neutral-400 text-center">
+                      {ele.character.length > 10
+                        ? ele.character.slice(0, 10) + "..."
+                        : ele.character}
+                    </Text>
+                  </View>
+                </TouchableNativeFeedback>
+              );
+            })}
         </ScrollView>
       </View>
     </View>

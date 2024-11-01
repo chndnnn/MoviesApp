@@ -11,8 +11,7 @@ const TopCast = ({ castData, name1 }) => {
   const image = "https://image.tmdb.org/t/p/w500";
 
   function onTrendingImagePressed(ele) {
-    console.log(ele);
-    router.push({ pathname: "/Cast", params: { name: ele } });
+    router.push({ pathname: "/Cast", params: { id: ele.id } });
   }
   return (
     <View className="w-full p-2 ">

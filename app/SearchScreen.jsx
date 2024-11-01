@@ -6,14 +6,34 @@ import { XMarkIcon, SearchIconOutline } from "react-native-heroicons/outline";
 import { useRouter } from "expo-router";
 import SearchedMovies from "../components/SearchedMovies";
 import ProgressBar from "../components/Progress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchSearchedMovies } from "../components/MovieDb";
 
 const SearchScreen = () => {
   const ios = Platform.OS == "ios";
   const router = useRouter();
   const [showLodaing, setShowLoading] = useState(true);
+  const [searchedMovies, setSearchedMovies] = useState();
+  const [searchedText, setSearchedText] = useState();
   function onCancelPress() {
     router.back();
+  }
+
+  useEffect(() => {
+    let debounce = setTimeout(() => {
+      if (searchedText) {
+        getSearchedMovie();
+      }
+    }, 500);
+
+    return () => clearTimeout(debounce);
+  }, [searchedText]);
+
+  async function getSearchedMovie() {
+    setShowLoading(false);
+    const data = await fetchSearchedMovies(searchedText);
+    setSearchedMovies(data.data.results);
+    setShowLoading(true);
   }
   return (
     <View className="flex-1 bg-neutral-800">
@@ -26,6 +46,7 @@ const SearchScreen = () => {
           <TextInput
             placeholderTextColor="grey"
             placeholder="Search movies"
+            onChangeText={(e) => setSearchedText(e)}
             className="text-white  flex-1 p-2 border-neutral-500 w-[80%] px-2 rounded"
           />
           <TouchableOpacity onPress={onCancelPress}>
@@ -35,7 +56,11 @@ const SearchScreen = () => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      {showLodaing ? <SearchedMovies /> : <ProgressBar />}
+      {showLodaing ? (
+        <SearchedMovies searchedMovieData={searchedMovies} />
+      ) : (
+        <ProgressBar />
+      )}
     </View>
   );
 };

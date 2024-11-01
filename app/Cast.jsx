@@ -4,9 +4,35 @@ import { ScrollView, TouchableOpacity } from "react-native";
 import { BackspaceIcon } from "react-native-heroicons/outline";
 import { HeartIcon } from "react-native-heroicons/solid";
 import MovieList from "../components/MovieList";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { fetchPersonDetails, fetchPersonMovies } from "../components/MovieDb";
+import ProgressBar from "../components/Progress";
 
 const Cast = () => {
   const ios = Platform.OS == "ios";
+  const [personDetails, setPersonDetails] = useState();
+  const [showLodaing, setShowLoading] = useState(true);
+  const [personMovies, setPersonMovies] = useState();
+  const { id } = useLocalSearchParams();
+  const image = "https://image.tmdb.org/t/p/w500";
+
+  useEffect(() => {
+    getPersonDetails();
+    getPersonMovies();
+  }, []);
+
+  async function getPersonDetails() {
+    const data = await fetchPersonDetails(id);
+    setPersonDetails(data.data);
+    setShowLoading(false);
+  }
+
+  async function getPersonMovies() {
+    const data = await fetchPersonMovies(id);
+    setPersonMovies(data.data.cast);
+    setShowLoading(false);
+  }
   return (
     <ScrollView className="bg-neutral-800 p-1">
       <SafeAreaView>
@@ -24,28 +50,21 @@ const Cast = () => {
         </View>
       </SafeAreaView>
       <View className="w-full justify-center items-center">
-        <View
-          style={{
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 5 },
-            shadowOpacity: 0.3,
-            shadowRadius: 10,
-            elevation: 10,
-          }}
-          className="h-72 w-72 rounded-full overflow-hidden border border-neutral-500 shadow-slate-200"
-        >
+        <View className="h-72 w-72 rounded-full overflow-hidden border border-neutral-500">
           <Image
             style={{ height: "100%", width: "100%", resizeMode: "cover" }}
-            source={require("./../assets/images/Henry.jpg")}
+            source={{
+              uri: `${image}${personDetails && personDetails.profile_path}`,
+            }}
           />
         </View>
       </View>
       <View>
         <Text className="text-white font-bold text-3xl mt-2 text-center">
-          Henry Clavil
+          {personDetails && personDetails.name}
         </Text>
         <Text className="text-neutral-400 text-xl mt-2 text-center">
-          United states , London
+          {personDetails && personDetails.place_of_birth}
         </Text>
       </View>
       <View className="w-full border flex flex-row p-2 justify-evenly mt-4 bg-neutral-700 rounded-full">
@@ -54,43 +73,51 @@ const Cast = () => {
           style={{ borderRightWidth: 1, borderRightColor: "black" }}
         >
           <Text className="text-white text-center">Gender</Text>
-          <Text className="text-neutral-400 text-center">Male</Text>
+          <Text className="text-neutral-400 text-center">
+            {personDetails && personDetails.gender != 1 ? "Male" : "Female"}
+          </Text>
         </View>
         <View
           className="px-2 "
           style={{ borderRightWidth: 1, borderRightColor: "black" }}
         >
           <Text className="text-white text-center">Birth Day</Text>
-          <Text className="text-neutral-400 text-center">17-03-2002</Text>
+          <Text className="text-neutral-400 text-center">
+            {personDetails && personDetails.birthday}
+          </Text>
         </View>
         <View
           className="px-2"
           style={{ borderRightWidth: 1, borderRightColor: "black" }}
         >
           <Text className="text-white text-center">Known For</Text>
-          <Text className="text-neutral-400 text-center">Acting</Text>
+          <Text className="text-neutral-400 text-center">
+            {personDetails && personDetails.known_for_department}
+          </Text>
         </View>
         <View className="px-2">
           <Text className="text-white text-center">Popularity</Text>
-          <Text className="text-neutral-400 text-center">64.2</Text>
+          <Text className="text-neutral-400 text-center">
+            {personDetails && personDetails.popularity}
+          </Text>
         </View>
       </View>
       <View className="mt-2 px-2">
         <Text className="text-xl text-white">Biography</Text>
         <Text className="text-neutral-400">
-          Henry William Dalgliesh Cavill was born on the Bailiwick of Jersey, a
-          British Crown dependency in the Channel Islands. His mother, Marianne
-          (Dalgliesh), a housewife, was also born on Jersey, and is of Irish,
-          Scottish and English ancestry. Henry's father, Colin Richard Cavill, a
-          stockbroker, is of English origin (born in Chester, England). Henry is
-          the second youngest son, with four brothers. He was privately educated
-          at St. Michael's Preparatory School in Saint Saviour, Jersey before
-          attending Stowe School in Buckinghamshire, England.
+          {personDetails && personDetails.biography}
         </Text>
       </View>
       <View className="mt-2">
-        <MovieList hideSeeAll={true} name1={"Movies"} />
+        {personMovies && personMovies.length > 0 && (
+          <MovieList
+            movieData={personMovies}
+            hideSeeAll={true}
+            name1={"Movies"}
+          />
+        )}
       </View>
+      {showLodaing && <ProgressBar />}
     </ScrollView>
   );
 };

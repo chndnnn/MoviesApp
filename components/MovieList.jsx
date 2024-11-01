@@ -14,7 +14,10 @@ const MovieList = ({ movieData, name1, hideSeeAll }) => {
   }
 
   function onSeeAllPressed() {
-    router.push("/SearchScreen");
+    router.push({
+      pathname: "/SearchScreen",
+      params: { id: name1 },
+    });
   }
   return (
     <View className="w-full p-2 ">
@@ -41,9 +44,9 @@ const MovieList = ({ movieData, name1, hideSeeAll }) => {
                       source={{ uri: `${image}${ele.poster_path}` }}
                     ></Image>
                     <Text className="text-sm text-white">
-                      {ele.original_title.length > 13
-                        ? ele.original_title.slice(0, 13) + "..."
-                        : ele.original_title}
+                      {ele.title.length > 13
+                        ? ele.title.slice(0, 13) + "..."
+                        : ele.title}
                     </Text>
                   </View>
                 </TouchableNativeFeedback>

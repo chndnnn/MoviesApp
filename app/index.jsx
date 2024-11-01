@@ -16,7 +16,7 @@ import {
 const Home = () => {
   const router = useRouter();
 
-  const [showLodaing, setShowLoading] = useState(false);
+  const [showLodaing, setShowLoading] = useState(true);
   const [trendingList, settrendingLists] = useState([]);
   const [upcomingList, setUpcomingListLists] = useState([]);
   const [topRatedList, setTopRatedLists] = useState([]);
@@ -34,14 +34,17 @@ const Home = () => {
   async function getTrendingMovies() {
     let data = await fetchTrendingMovies();
     settrendingLists(data.data.results);
+    setShowLoading(false);
   }
   async function getUpcomingsMovies() {
     let data = await fetchUpcomingMovies();
     setUpcomingListLists(data.data.results);
+    setShowLoading(false);
   }
   async function getTopRatedMovies() {
     let data = await fetchTopRatedMovies();
     setTopRatedLists(data.data.results);
+    setShowLoading(false);
   }
 
   return (

@@ -40,20 +40,22 @@ const Movie = () => {
     getMovieDescription();
     getMovieCasts();
     getSimilarMovie();
-    setShowLoading(false);
   }, []);
 
   async function getMovieDescription() {
     const data = await fetchMoviedescription(id);
     setDescription(data.data);
+    setShowLoading(false);
   }
   async function getMovieCasts() {
     const data = await fetchMovieCasts(id);
     setCasts(data.data.cast);
+    setShowLoading(false);
   }
   async function getSimilarMovie() {
     const data = await fetchSimilarMovie(id);
     setSimilar(data.data.results);
+    setShowLoading(false);
   }
 
   fetchSimilarMovie;
@@ -133,14 +135,18 @@ const Movie = () => {
                 </Text>
               </View>
               <View>
-                <TopCast castData={casts} name1={"Top Casts"} />
+                {casts && casts.length > 0 && (
+                  <TopCast castData={casts} name1={"Top Casts"} />
+                )}
               </View>
               <View>
-                <MovieList
-                  movieData={similar}
-                  hideSeeAll={true}
-                  name1={"Similar Movies"}
-                />
+                {similar && similar.length > 0 && (
+                  <MovieList
+                    movieData={similar}
+                    hideSeeAll={true}
+                    name1={"Similar Movies"}
+                  />
+                )}
               </View>
             </View>
           </View>

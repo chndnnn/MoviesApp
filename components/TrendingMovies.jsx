@@ -9,7 +9,6 @@ const TrendingMovies = ({ trendingData }) => {
   const height = Dimensions.get("window").height;
   const router = useRouter();
   const image = "https://image.tmdb.org/t/p/w500";
-  console.log(trendingData);
 
   function onViewClick(ele) {
     router.push({ pathname: "/movie", params: { id: ele.id } });

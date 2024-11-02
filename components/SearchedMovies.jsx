@@ -14,7 +14,7 @@ import ProgressBar from "./Progress";
 const SearchedMovies = ({ searchedMovieData }) => {
   const { height, width } = Dimensions.get("window");
   const { id, data } = useLocalSearchParams();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setpage] = useState(1);
   const [movies, setMovies] = useState([]);
   const router = useRouter();
@@ -52,23 +52,28 @@ const SearchedMovies = ({ searchedMovieData }) => {
   function onEndReaced() {
     if (id == "Upcoming") {
       getUpcomingsMovies(page + 1);
+      setpage((prev) => prev + 1);
     } else if (id == "Top Rated") {
       getTopRatedMovies(page + 1);
+      setpage((prev) => prev + 1);
     }
-    setpage((prev) => prev + 1);
   }
 
   const renderItem = ({ item }) => (
     <TouchableNativeFeedback onPress={() => onMoviePress(item)}>
       <View
-        style={{ height: height * 0.27, width: width * 0.45 }}
+        style={{ height: height * 0.35, width: width * 0.45 }}
         className="flex flex-col items-center overflow-hidden rounded-xl"
       >
         <Image
           className="w-full h-[90%] rounded-xl object-cover"
-          source={{ uri: `${image}${item.poster_path}` }}
+          source={
+            item.poster_path
+              ? { uri: `${image}${item.poster_path}` }
+              : require("./../assets/images/movieImageNotFound.jpg")
+          }
         />
-        <Text className="text-sm font-semibold text-neutral-400">
+        <Text className="text-sm font-semibold mb-4 text-neutral-400">
           {item.title.length > 20
             ? item.title.slice(0, 20) + "..."
             : item.title}

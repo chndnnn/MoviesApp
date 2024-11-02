@@ -47,13 +47,17 @@ const Home = () => {
     setShowLoading(false);
   }
 
+  function onFavouriteClick() {
+    router.push({ pathname: "/favouritesScreen" });
+  }
+
   return (
     <View className="flex-1 bg-neutral-800">
       {!showLodaing ? (
         <SafeAreaView className="flex-1 bg-neutral-800 mt-10 p-1">
           <View className="mb-2">
             <View className="flex flex-row justify-between items-center p-2">
-              <Bars3BottomLeftIcon color="white" />
+              <Bars3BottomLeftIcon onPress={onFavouriteClick} color="white" />
               <View className="flex-row items-center">
                 <Text className="text-yellow-500 text-3xl">M</Text>
                 <Text className="text-white text-2xl font-bold">ovie</Text>

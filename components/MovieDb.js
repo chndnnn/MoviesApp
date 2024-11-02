@@ -1,4 +1,5 @@
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Api_Key = 'b8248127d3544109ea806d0e163d1275'
 const BaseUrl = 'https://api.themoviedb.org/3'
@@ -65,5 +66,37 @@ export const fetchPersonMovies = (id)=>{
 
 export const fetchSearchedMovies = (searchedText)=>{
     return apiCall(searchedMoviesEndPoint(searchedText))
+}
+
+export const storedata = async (key,value)=>{
+    try{
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem(key, jsonValue);
+    }catch(e){
+        console.warn("Unable to add to favourite")
+    }
+}
+
+export const getData = async (key)=>{
+    try{
+        const jsonValue = await AsyncStorage.getItem(key);
+        return jsonValue !== null ? JSON.parse(jsonValue):[]
+    }catch(e){
+        console.log(e)
+    }
+}
+
+export const removeItem = async (id)=>{
+    try{
+        const myData = await getData("FAVORITES_KEY") || [];
+        const newData = myData?.filter(myid=>myid != id)
+        await storedata("FAVORITES_KEY",newData)
+    }catch(e){
+        console.log(e)
+    }
+}
+
+export const removeCompletely = async ()=>{
+    await AsyncStorage.removeItem("FAVORITES_KEY")
 }
 

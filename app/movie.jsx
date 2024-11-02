@@ -19,6 +19,9 @@ import {
   fetchMovieCasts,
   fetchMoviedescription,
   fetchSimilarMovie,
+  getData,
+  storedata,
+  removeItem,
 } from "./../components/MovieDb";
 
 const Movie = () => {
@@ -26,6 +29,7 @@ const Movie = () => {
   const router = useRouter();
   const [showLodaing, setShowLoading] = useState(true);
   const [description, setDescription] = useState();
+  const [fav, setFav] = useState(false);
   const [similar, setSimilar] = useState();
   const [casts, setCasts] = useState();
   const { id } = useLocalSearchParams();
@@ -40,6 +44,7 @@ const Movie = () => {
     getMovieDescription();
     getMovieCasts();
     getSimilarMovie();
+    getFavourite();
   }, []);
 
   async function getMovieDescription() {
@@ -56,6 +61,39 @@ const Movie = () => {
     const data = await fetchSimilarMovie(id);
     setSimilar(data.data.results);
     setShowLoading(false);
+  }
+
+  async function onFavClick() {
+    if (!fav) {
+      try {
+        const currentFavourite = (await getData("FAVORITES_KEY")) || [];
+        if (!currentFavourite.includes(id)) {
+          currentFavourite.push(id);
+          await storedata("FAVORITES_KEY", currentFavourite);
+        }
+        setFav(true);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      try {
+        await removeItem(id);
+        setFav(false);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  async function getFavourite() {
+    try {
+      const currentFavourite = (await getData("FAVORITES_KEY")) || [];
+      if (currentFavourite.includes(id)) {
+        setFav(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   fetchSimilarMovie;
@@ -80,8 +118,8 @@ const Movie = () => {
               <TouchableOpacity onPress={onBackClick}>
                 <BackspaceIcon size={28} color={"orange"} />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <HeartIcon size={28} color={"white"} />
+              <TouchableOpacity onPress={onFavClick}>
+                <HeartIcon size={28} color={fav ? "orange" : "white"} />
               </TouchableOpacity>
             </View>
 

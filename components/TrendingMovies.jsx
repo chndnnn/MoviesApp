@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableNativeFeedback } from "react-native";
-import { Dimensions, Image, Text, View } from "react-native";
+import { Dimensions, ImageBackground, Image, Text, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useRouter } from "expo-router";
 
@@ -40,17 +40,25 @@ const TrendingMovies = ({ trendingData }) => {
                   transform: [{ scale: 0.9 }],
                 }}
               >
-                <Image
-                  source={{
-                    uri: `${image}${item.poster_path}`,
-                  }}
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    resizeMode: "cover contain", // Ensures the image covers the view without distortion
-                  }}
-                  className="rounded-xl"
-                ></Image>
+                <ImageBackground
+                  source={{ uri: `${image}${item.backdrop_path}` }}
+                  style={{ flex: 1 }}
+                  imageStyle={{ opacity: 0.5 }}
+                >
+                  <Image
+                    source={
+                      item.poster_path
+                        ? { uri: `${image}${item.poster_path}` }
+                        : require("./../assets/images/movieImageNotFound.jpg")
+                    }
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      resizeMode: "contain", // Ensures the image covers the view without distortion
+                    }}
+                    className="rounded-xl"
+                  ></Image>
+                </ImageBackground>
               </View>
             </TouchableNativeFeedback>
           )}

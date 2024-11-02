@@ -1,9 +1,9 @@
-import { Platform, TextInput } from "react-native";
+import { Dimensions, Image, Platform, TextInput } from "react-native";
 import { SafeAreaView } from "react-native";
 import { TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native";
 import { XMarkIcon, SearchIconOutline } from "react-native-heroicons/outline";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import SearchedMovies from "../components/SearchedMovies";
 import ProgressBar from "../components/Progress";
 import { useEffect, useState } from "react";
@@ -11,7 +11,9 @@ import { fetchSearchedMovies } from "../components/MovieDb";
 
 const SearchScreen = () => {
   const ios = Platform.OS == "ios";
+  const { width } = Dimensions.get("window");
   const router = useRouter();
+  const { id } = useLocalSearchParams();
   const [showLodaing, setShowLoading] = useState(true);
   const [searchedMovies, setSearchedMovies] = useState();
   const [searchedText, setSearchedText] = useState();
@@ -56,10 +58,23 @@ const SearchScreen = () => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      {showLodaing ? (
-        <SearchedMovies searchedMovieData={searchedMovies} />
+      {(searchedMovies && searchedMovies.length > 0) || id ? (
+        showLodaing ? (
+          <SearchedMovies searchedMovieData={searchedMovies} />
+        ) : (
+          <ProgressBar />
+        )
       ) : (
-        <ProgressBar />
+        <View
+          style={{ width }}
+          className="overflow-hidden flex items-center justify-center"
+        >
+          <Image
+            className="w-[80%] mix-blend-multiply  rounded-lg"
+            source={require("./../assets/images/MovieTime.webp")}
+            style={{ resizeMode: "contain" }}
+          ></Image>
+        </View>
       )}
     </View>
   );

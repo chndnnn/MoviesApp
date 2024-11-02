@@ -30,7 +30,11 @@ const TopCast = ({ castData, name1 }) => {
                   <View className="mr-3 flex flex-col">
                     <Image
                       className="w-[70] rounded-full border border-neutral-500 h-[70] object-cover"
-                      source={{ uri: `${image}${ele.profile_path}` }}
+                      source={
+                        ele.profile_path
+                          ? { uri: `${image}${ele.profile_path}` }
+                          : require("./../assets/images/person.png")
+                      }
                     ></Image>
                     <Text className="text-sm text-white text-center">
                       {ele.name.length > 10

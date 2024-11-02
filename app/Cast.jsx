@@ -8,9 +8,11 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { fetchPersonDetails, fetchPersonMovies } from "../components/MovieDb";
 import ProgressBar from "../components/Progress";
+import { useRouter } from "expo-router";
 
 const Cast = () => {
   const ios = Platform.OS == "ios";
+  const router = useRouter();
   const [personDetails, setPersonDetails] = useState();
   const [showLodaing, setShowLoading] = useState(true);
   const [personMovies, setPersonMovies] = useState();
@@ -33,6 +35,10 @@ const Cast = () => {
     setPersonMovies(data.data.cast);
     setShowLoading(false);
   }
+
+  function onBackPress() {
+    router.back();
+  }
   return (
     <ScrollView className="bg-neutral-800 p-1">
       <SafeAreaView>
@@ -41,12 +47,10 @@ const Cast = () => {
             !ios && "mt-12"
           } w-full flex flex-row justify-between px-3`}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onBackPress}>
             <BackspaceIcon size={28} color={"orange"} />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <HeartIcon size={28} color={"white"} />
-          </TouchableOpacity>
+          
         </View>
       </SafeAreaView>
       <View className="w-full justify-center items-center">

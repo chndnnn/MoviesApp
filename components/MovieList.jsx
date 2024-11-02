@@ -41,9 +41,13 @@ const MovieList = ({ movieData, name1, hideSeeAll }) => {
                   <View className="mr-2 h-[180] w-[120px] flex flex-col justify-center items-center">
                     <Image
                       className="w-full rounded-xl h-[150] object-cover"
-                      source={{ uri: `${image}${ele.poster_path}` }}
+                      source={
+                        ele.poster_path
+                          ? { uri: `${image}${ele.poster_path}` }
+                          : require("./../assets/images/movieImageNotFound.jpg")
+                      }
                     ></Image>
-                    <Text className="text-sm text-white">
+                    <Text className="text-sm text-white font-semibold">
                       {ele.title.length > 13
                         ? ele.title.slice(0, 13) + "..."
                         : ele.title}

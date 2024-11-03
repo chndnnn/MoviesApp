@@ -143,13 +143,14 @@ const FavouritesScreen = () => {
       ) : (
         <View
           style={{ width }}
-          className="overflow-hidden flex items-center justify-center"
+          className="overflow-hidden flex items-center justify-center flex-1 "
         >
-          <Image
+          {/* <Image
             className="w-[80%] rounded-lg"
             source={require("./../assets/images/book.png")}
             style={{ resizeMode: "contain" }}
-          ></Image>
+          ></Image> */}
+          <Text className="text-white">No Favourites found!!</Text>
         </View>
       )}
       {loading && <ProgressBar />}

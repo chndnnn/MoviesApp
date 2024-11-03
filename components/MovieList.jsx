@@ -6,7 +6,6 @@ import { useRouter } from "expo-router";
 const MovieList = ({ movieData, name1, hideSeeAll }) => {
   const router = useRouter();
   const width = Dimensions.get("window").width;
-  const name = "Superman vs batman";
   const image = "https://image.tmdb.org/t/p/w500";
 
   function onTrendingImagePressed(ele) {

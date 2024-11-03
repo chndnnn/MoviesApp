@@ -1,8 +1,7 @@
 import { Dimensions, Image, Platform, TextInput } from "react-native";
 import { SafeAreaView } from "react-native";
 import { TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native";
-import { XMarkIcon, SearchIconOutline } from "react-native-heroicons/outline";
+import { XMarkIcon } from "react-native-heroicons/outline";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import SearchedMovies from "../components/SearchedMovies";
 import ProgressBar from "../components/Progress";
@@ -22,13 +21,16 @@ const SearchScreen = () => {
   }
 
   useEffect(() => {
-    let debounce = setTimeout(() => {
-      if (searchedText) {
-        getSearchedMovie();
-      }
-    }, 500);
-
-    return () => clearTimeout(debounce);
+    if (searchedText !== null || searchedText !== "") {
+      setShowLoading(false);
+      let debounce = setTimeout(() => {
+        if (searchedText) {
+          getSearchedMovie();
+        }
+      }, 500);
+      setShowLoading(true);
+      return () => clearTimeout(debounce);
+    }
   }, [searchedText]);
 
   async function getSearchedMovie() {

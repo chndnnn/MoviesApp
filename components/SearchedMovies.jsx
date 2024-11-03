@@ -15,6 +15,7 @@ const SearchedMovies = ({ searchedMovieData }) => {
   const { height, width } = Dimensions.get("window");
   const { id, data } = useLocalSearchParams();
   const [loading, setLoading] = useState(true);
+  const [showloading, setShowLoading] = useState(false);
   const [page, setpage] = useState(1);
   const [movies, setMovies] = useState([]);
   const router = useRouter();

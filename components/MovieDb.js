@@ -5,7 +5,7 @@ const Api_Key = 'b8248127d3544109ea806d0e163d1275'
 const BaseUrl = 'https://api.themoviedb.org/3'
 // const trendingMovieEndPoint = `${BaseUrl}/trending/movie/day?api_key=${Api_Key}`
 const trendingMovieEndPoint = `${BaseUrl}/discover/movie?api_key=${Api_Key}&with_original_language=hi&sort_by=popularity.desc`
-const upcomingMovieEndPoint = `${BaseUrl}/movie/upcoming?api_key=${Api_Key}`
+const upcomingMovieEndPoint = `${BaseUrl}/movie/upcoming?api_key=${Api_Key}&with_original_language=hi`
 const topratedMovieEndPoint = `${BaseUrl}/movie/top_rated?api_key=${Api_Key}`
 const MovieDescriptionEndPoint = id => `${BaseUrl}/movie/${id}?api_key=${Api_Key}`
 const MovieCastsEndPoint = id => `${BaseUrl}/movie/${id}/credits?api_key=${Api_Key}`

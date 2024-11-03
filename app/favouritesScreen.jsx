@@ -18,14 +18,17 @@ import { Platform } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { BackspaceIcon, TrashIcon } from "react-native-heroicons/outline";
 import { useRouter } from "expo-router";
+import ProgressBar from "../components/Progress";
 
 const FavouritesScreen = () => {
   const { height, width } = Dimensions.get("window");
   const image = "https://image.tmdb.org/t/p/w500";
   const ios = Platform.OS == "ios";
   const router = useRouter();
+  const [loading, showloading] = useState(false);
   const [favMoviesId, setFavMoviesId] = useState([]);
   const [favMovies, setFavMovies] = useState([]);
+
   useEffect(() => {
     getAllFavouriteMovies();
   }, []);
@@ -41,6 +44,7 @@ const FavouritesScreen = () => {
 
   async function fetchMovieDesc() {
     try {
+      showloading(true);
       const allMovies = await Promise.all(
         favMoviesId.map(async (id) => {
           const { data } = await fetchMoviedescription(id);
@@ -48,8 +52,10 @@ const FavouritesScreen = () => {
         })
       );
       setFavMovies(allMovies);
+      showloading(false);
     } catch (e) {
       console.log(e);
+      showloading(false);
     }
   }
 
@@ -146,6 +152,7 @@ const FavouritesScreen = () => {
           ></Image>
         </View>
       )}
+      {loading && <ProgressBar />}
     </View>
   );
 };

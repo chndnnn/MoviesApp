@@ -6,8 +6,6 @@ import { useRouter } from "expo-router";
 const TopCast = ({ castData, name1 }) => {
   const router = useRouter();
   const width = Dimensions.get("window").width;
-  const name = "Superman vs batman";
-  const name2 = "henry";
   const image = "https://image.tmdb.org/t/p/w500";
 
   function onTrendingImagePressed(ele) {
@@ -57,3 +55,6 @@ const TopCast = ({ castData, name1 }) => {
 };
 
 export default TopCast;
+
+
+
